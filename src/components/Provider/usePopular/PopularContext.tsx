@@ -1,5 +1,11 @@
 import axios from "axios";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Asset } from "../../types/Assets";
 interface TAssets {
   data: Asset[];
@@ -23,6 +29,9 @@ export const usePopularService = () => {
       setLoading(false);
     }
   }, []);
+  useEffect(() => {
+    fetchPopular();
+  }, [fetchPopular]);
   return {
     popular,
     fetchPopular,

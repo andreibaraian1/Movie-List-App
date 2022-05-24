@@ -35,8 +35,6 @@ const useMenuService = () => {
 
   return {
     menu,
-    fetchListener,
-    setFetchListener,
     menuLoading,
   };
 };

@@ -32,12 +32,6 @@ export const Home = () => {
   const [sliderItems, setSliderItems] = useState(0);
 
   useEffect(() => {
-    const fetchAssets = async () => {
-      await fetchPopular();
-    };
-    fetchAssets();
-  }, [fetchPopular]);
-  useEffect(() => {
     const size = document.body.clientWidth;
     if (size <= 464) {
       setSliderItems(1);

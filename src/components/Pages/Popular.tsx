@@ -4,13 +4,7 @@ import { GridContainer } from "../styles/Categories/Category.styled";
 import { AssetCard } from "../Card/AssetCard";
 export const Popular = () => {
   const popularContext = usePopular();
-  const { popular, fetchPopular } = popularContext;
-  useEffect(() => {
-    const fetchAssets = async () => {
-      await fetchPopular();
-    };
-    fetchAssets();
-  }, [fetchPopular]);
+  const { popular } = popularContext;
 
   return (
     <>
