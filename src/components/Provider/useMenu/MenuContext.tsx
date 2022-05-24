@@ -26,10 +26,8 @@ const useMenuService = () => {
       if (res.data.err) {
         setFetchListener((prev) => !prev);
       } else {
-        setTimeout(() => {
-          setMenu(res.data.data);
-          setMenuLoading(false);
-        }, 2500);
+        setMenu(res.data.data);
+        setMenuLoading(false);
       }
     };
     fetchMenu();
