@@ -1,23 +1,22 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Category } from "../types/Category";
 import {
   GridContainer,
   CategoryWrapper,
 } from "../styles/Categories/Category.styled";
+import useFetch from "../hooks/useFetch";
 export const Categories = () => {
+  const { fetch, data } = useFetch();
   const [categories, setCategories] = useState<Category[] | []>([]);
+  const fetchCategories = useCallback(async () => {
+    await fetch(`${process.env.REACT_APP_API}/api/vod/category`);
+  }, [fetch]);
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await axios.get(
-        "https://video-proxy.3rdy.tv/api/vod/category"
-      );
-      if (!res.data.err) {
-        setCategories(res.data.data.genres);
-      }
-    };
+    if (data) setCategories(data.genres);
+  }, [data]);
+  useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
   return (
     <GridContainer>
       {categories?.map((category) => (

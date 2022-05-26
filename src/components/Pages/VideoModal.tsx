@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
+import YouTube from "react-youtube";
 
 interface Props {
   link: string;
@@ -30,14 +31,19 @@ export const VideoModal: React.FC<Props> = ({ link, visible, setVisible }) => {
       style={customStyles}
       ariaHideApp={false}
     >
-      <iframe
-        width={850}
-        height={478}
-        src={`https://www.youtube.com/embed/${link}?&autoplay=1`}
-        title="YouTube video player"
-        frameBorder={0}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
+      <YouTube
+        videoId={link}
+        opts={{
+          height:
+            document.body.clientHeight > 478 ? 478 : document.body.clientHeight,
+          width:
+            document.body.clientWidth > 850 ? 850 : document.body.clientWidth,
+
+          playerVars: {
+            autoplay: 1,
+          },
+        }}
+        onEnd={() => setVisible(false)}
       />
     </Modal>
   );

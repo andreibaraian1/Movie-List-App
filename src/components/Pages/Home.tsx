@@ -1,57 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { AssetCard } from "../Card/AssetCard";
 import { usePopular } from "../Provider/usePopular/PopularContext";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-const responsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 12,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1400 },
-    items: 8,
-  },
-  desktop_small: {
-    breakpoint: { max: 1400, min: 890 },
-    items: 5,
-  },
-  tablet: {
-    breakpoint: { max: 890, min: 464 },
-    items: 3,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 2,
-  },
-};
+import {
+  CarouselContainer,
+  CarouselScroller,
+  LeftArrow,
+  RightArrow,
+} from "../styles/Carousel/Carousel.styled";
 
 export const Home = () => {
   const popularContext = usePopular();
-  const { popular, fetchPopular } = popularContext;
-  const [sliderItems, setSliderItems] = useState(0);
-
+  const { popular } = popularContext;
+  const [columnPercentage, setColumnPercentage] = useState(0);
+  const [leftArrowVisible, setLeftArrowVisible] = useState(false);
+  const [rightArrowVisible, setRightArrowVisible] = useState(true);
+  const carousel = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const size = document.body.clientWidth;
-    if (size <= 464) {
-      setSliderItems(1);
+
+    if (size <= 450) {
+      setColumnPercentage(48);
     }
-    if (size > 464 && size <= 890) {
-      setSliderItems(2);
-    }
-    if (size > 890 && size <= 1400) {
-      setSliderItems(4);
+    if (size > 450 && size <= 1400) {
+      setColumnPercentage(25);
     }
     if (size > 1400 && size <= 3000) {
-      setSliderItems(7);
+      setColumnPercentage(13);
     }
     if (size > 3000 && size <= 4000) {
-      setSliderItems(11);
+      setColumnPercentage(10);
     }
   }, []);
+  useEffect(() => {}, [carousel.current?.scrollLeft]);
+  const handleArrow = (offset: number) => {
+    if (!carousel.current) return;
+    carousel.current.scrollBy({
+      top: 0,
+      left: offset,
+      behavior: "smooth",
+    });
+  };
+
+  const handleScroll = () => {
+    if (!carousel.current) return;
+
+    if (carousel.current?.scrollLeft < 20) {
+      setLeftArrowVisible(false);
+    } else {
+      setLeftArrowVisible(true);
+    }
+    if (
+      Math.ceil(carousel.current.scrollLeft + carousel.current.offsetWidth) >=
+      carousel.current.scrollWidth
+    ) {
+      setRightArrowVisible(false);
+    } else {
+      setRightArrowVisible(true);
+    }
+  };
   return (
     <>
-      <Carousel
+      {/* <Carousel
         responsive={responsive}
         shouldResetAutoplay={false}
         autoPlay={false}
@@ -60,7 +70,20 @@ export const Home = () => {
         {popular?.map((asset) => (
           <AssetCard key={asset.id} asset={asset} />
         ))}
-      </Carousel>
+      </Carousel> */}
+      <CarouselContainer>
+        {leftArrowVisible && <LeftArrow onClick={() => handleArrow(-500)} />}
+        {rightArrowVisible && <RightArrow onClick={() => handleArrow(500)} />}
+        <CarouselScroller
+          ref={carousel}
+          onScroll={handleScroll}
+          columns={columnPercentage}
+        >
+          {popular?.map((asset) => (
+            <AssetCard key={asset.id} asset={asset} />
+          ))}
+        </CarouselScroller>
+      </CarouselContainer>
     </>
   );
 };

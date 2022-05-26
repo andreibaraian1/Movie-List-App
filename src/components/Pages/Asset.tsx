@@ -11,19 +11,21 @@ import { AssetCard } from "../Card/AssetCard";
 import { Button } from "../styles/Button.styled";
 import { getTrailerKey } from "../utils/GetTrailerKey";
 import { VideoModal } from "./VideoModal";
+import useFetch from "../hooks/useFetch";
 
 export const Asset: React.FC = () => {
   const { id } = useParams();
   const [asset, setAsset] = useState<AssetType | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
   const [key, setKey] = useState("");
+  const { fetch, data } = useFetch();
+  useEffect(() => {
+    if (!data) return;
+    setAsset(data);
+  }, [data]);
   useEffect(() => {
     const fetchAssetDetails = async () => {
-      const res = await axios.get(
-        `https://video-proxy.3rdy.tv/api/vod/asset/${id}`
-      );
-      if (res.data.err) return;
-      setAsset(res.data.data);
+      await fetch(`${process.env.REACT_APP_API}/api/vod/asset/${id}`);
     };
     fetchAssetDetails();
   }, [id]);
@@ -37,7 +39,7 @@ export const Asset: React.FC = () => {
   const handleTrailerButton = async () => {
     if (!asset) return;
     const res = await axios.get(
-      `https://video-proxy.3rdy.tv/api/vod/asset/${asset.id}/videos`
+      `${process.env.REACT_APP_API}/api/vod/asset/${asset.id}/videos`
     );
     const key = getTrailerKey(res.data.data.results);
     if (key) {

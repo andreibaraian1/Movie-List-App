@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePopular } from "../Provider/usePopular/PopularContext";
 import { GridContainer } from "../styles/Categories/Category.styled";
 import { AssetCard } from "../Card/AssetCard";

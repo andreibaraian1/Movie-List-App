@@ -20,7 +20,7 @@ const useMenuService = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       const res = await axios.get<TMenu>(
-        "https://video-proxy.3rdy.tv/api/static/menu"
+        `${process.env.REACT_APP_API}/api/static/menu`
       );
 
       if (res.data.err) {

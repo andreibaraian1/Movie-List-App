@@ -22,7 +22,7 @@ export const usePopularService = () => {
 
   const fetchPopular = useCallback(async () => {
     const res = await axios.get<TAssets>(
-      "https://video-proxy.3rdy.tv/api/vod/popular"
+      `${process.env.REACT_APP_API}/api/vod/popular`
     );
     if (!res.data.err) {
       setPopular(res.data.data);
